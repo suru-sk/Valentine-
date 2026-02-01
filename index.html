@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Valentine</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #f8c8dc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 20px;
+      text-align: center;
+      width: 320px;
+      height: 480px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    h2 { margin-bottom: 15px; line-height: 1.5; }
+    img { width: 200px; height: 250px; object-fit: cover; border-radius: 15px; margin-bottom: 20px; }
+
+    button {
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      cursor: pointer;
+      position: absolute;
+    }
+
+    #yes {
+      background: #ff4d6d;
+      color: white;
+      bottom: 20px;
+      left: 50px;
+      z-index: 10;
+      width: 70px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+    }
+
+    #no {
+      background: #ccc;
+      color: black;
+      font-weight: bold;
+      font-size: 16px;
+      z-index: 5;
+      width: 70px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card" id="card">
+  <h2>Inchara, will you be my Valentine? 💖</h2>
+  <img src="her.jpg" alt="Her Photo">
+  <button id="yes" onclick="yesClick()">Yes</button>
+  <button id="no">No</button>
+</div>
+
+<script>
+const noBtn = document.getElementById("no");
+const card = document.getElementById("card");
+const cardWidth = card.clientWidth - noBtn.offsetWidth;
+const cardHeight = card.clientHeight - noBtn.offsetHeight;
+
+// Start position
+let posX = Math.random() * cardWidth;
+let posY = Math.random() * cardHeight;
+
+// Initial random velocity
+let velX = (Math.random() - 0.5) * 3;
+let velY = (Math.random() - 0.5) * 3;
+
+function animateNo() {
+  // Small random acceleration for smooth floating
+  velX += (Math.random() - 0.5) * 0.2;
+  velY += (Math.random() - 0.5) * 0.2;
+
+  // Limit velocity
+  velX = Math.max(Math.min(velX, 3), -3);
+  velY = Math.max(Math.min(velY, 3), -3);
+
+  posX += velX;
+  posY += velY;
+
+  // Bounce naturally at edges
+  if(posX <= 0) { posX = 0; velX *= -1; }
+  if(posX >= cardWidth) { posX = cardWidth; velX *= -1; }
+  if(posY <= 0) { posY = 0; velY *= -1; }
+  if(posY >= cardHeight) { posY = cardHeight; velY *= -1; }
+
+  noBtn.style.left = posX + "px";
+  noBtn.style.top = posY + "px";
+
+  requestAnimationFrame(animateNo);
+}
+animateNo();
+
+// Panic jump — huge jump when hovering/touching
+function panicJump() {
+  posX += (Math.random() - 0.5) * 400;
+  posY += (Math.random() - 0.5) * 400;
+
+  // Clamp inside card
+  posX = Math.max(0, Math.min(posX, cardWidth));
+  posY = Math.max(0, Math.min(posY, cardHeight));
+
+  noBtn.style.left = posX + "px";
+  noBtn.style.top = posY + "px";
+}
+
+// Trigger panic jump
+noBtn.addEventListener("touchstart", panicJump);
+noBtn.addEventListener("mouseover", panicJump);
+noBtn.addEventListener("mousedown", panicJump);
+
+// Yes click — show message + selfie
+function yesClick() {
+  const messageHTML = `
+    <div style="
+      height:100vh;
+      background:#f8c8dc;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      font-family:Arial;
+      padding:20px;
+    ">
+      <h2 style="line-height:1.5;">
+        So… Valentine’s confirmed 😌<br>
+        I’m glad it’s with you..<br>
+        <strong>My Inch babyy 🐣💕</strong>
+      </h2>
+      <img src="us.png" style="
+        width:280px;
+        border-radius:20px;
+        margin-top:25px;
+      ">
+    </div>
+  `;
+  document.body.innerHTML = messageHTML;
+}
+</script>
+
+</body>
+</html>
